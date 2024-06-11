@@ -3,7 +3,7 @@
  * @version
  */
 
-package com.example.mc_sim_data;
+package com.example.model;
 
 public class Spitzhacke extends Werkzeug{
     public Spitzhacke(String material) {

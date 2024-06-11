@@ -3,6 +3,6 @@ module com.example.mc_simfx {
     requires javafx.fxml;
 
 
-    opens com.example.mc_simfx to javafx.fxml;
-    exports com.example.mc_simfx;
+    opens com.example.controller to javafx.fxml;
+    exports com.example.controller;
 }

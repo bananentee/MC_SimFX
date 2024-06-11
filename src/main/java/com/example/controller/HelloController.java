@@ -1,25 +1,18 @@
-package com.example.mc_simfx;
+package com.example.controller;
 
 import javafx.animation.AnimationTimer;
-import javafx.beans.binding.BooleanBinding;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
 
 import java.net.URL;
-import java.util.Observable;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 
-import com.example.mc_sim_data.*;
+import com.example.model.*;
 
 public class HelloController implements Initializable {
     /* fxml attributes */
@@ -32,6 +25,8 @@ public class HelloController implements Initializable {
     private Button btnPickaxe;
     @FXML
     private Button btnAxe;
+
+    /* local attributes */
     private XYChart.Series<String, Integer> worldgen;
     private XYChart.Data<String, Integer> wood;
     private XYChart.Data<String, Integer> stone;
@@ -42,21 +37,23 @@ public class HelloController implements Initializable {
 
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) { //runs only one time at the start of the programm
+    public void initialize(URL url, ResourceBundle resourceBundle) {//runs only one time at the start of the programm
         initBarchart();
+        new Spiel().play();
+
         timer.start();
 
-        BooleanBinding binding = new BooleanBinding() {
-            @Override
-            protected boolean computeValue() {
-                return progressBar.progressProperty().getValue() > 0;
-            }
-        };
-        btnPickaxe.disableProperty().bind(binding);
-        btnAxe.disableProperty().bind(binding);
+//        BooleanBinding binding = new BooleanBinding() {
+//            @Override
+//            protected boolean computeValue() {
+//                return progressBar.progressProperty().getValue() > 0;
+//            }
+//        };
+//        btnPickaxe.disableProperty().bind(binding);
+//        btnAxe.disableProperty().bind(binding);
     }
 
-    private AnimationTimer timer = new AnimationTimer() { // runs every frame
+    private final AnimationTimer timer = new AnimationTimer() { // runs every frame
         @Override
         public void handle(long l) {
             increaseProgress();
@@ -66,7 +63,6 @@ public class HelloController implements Initializable {
 
     @FXML
     public void btnSpCraftenClick(ActionEvent event) {
-        System.out.println("Funktioniert");
         Spitzhacke spitzhacke = new Spitzhacke("Holz");
         wood.setYValue(wood.getYValue() - 10);
 
@@ -74,8 +70,8 @@ public class HelloController implements Initializable {
 
     @FXML
     void abbauDelay(ActionEvent event) {
-   //     btnPickaxe.setDisable(true);
-    //    btnAxe.setDisable(true);
+        btnPickaxe.setDisable(true);
+        btnAxe.setDisable(true);
         timer.start();
     }
 
@@ -113,8 +109,8 @@ public class HelloController implements Initializable {
             progress = 0;
             progressBar.setProgress(progress);
             timer.stop();
-            //btnPickaxe.setDisable(false);
-           // btnAxe.setDisable(false);
+            btnPickaxe.setDisable(false);
+            btnAxe.setDisable(false);
         }
         progress += 0.005;
         progressBar.setProgress(progress);

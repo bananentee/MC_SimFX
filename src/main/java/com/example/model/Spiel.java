@@ -3,27 +3,30 @@
  * @version
  */
 
-package com.example.mc_sim_data;
+package com.example.model;
 
 public class Spiel {
+    private Welt world;
+    private Spieler player;
 
-    public static void main(String[] args) {
-        Welt welt = new Welt ();
-        Spieler spieler = new Spieler ("Steve",10, welt);
+    public void play() {
+        world = new Welt ();
+        player = new Spieler ("Steve",10, world);
 
         System.out.println("---------------------------");
-        welt.generieren();
+        world.generieren();
         System.out.println("---------------------------");
-        spieler.abbauen();
+        player.abbauen();
         System.out.println("---------------------------");
-        welt.showMat();
+        world.showMat();
         System.out.println("---------------------------");
-        spieler.showInv();
+        player.showInv();
         System.out.println("---------------------------");
-        spieler.abbauen();
+        player.abbauen();
         System.out.println("---------------------------");
-        welt.showMat();
+        world.showMat();
     }
+
 
 
 }
