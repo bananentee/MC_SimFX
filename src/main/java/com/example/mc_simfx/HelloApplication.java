@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.mc_simfx;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

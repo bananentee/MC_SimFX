@@ -3,7 +3,7 @@
  * @version
  */
 
-package com.example.model;
+package com.example.mc_sim_data;
 
 public class Spieler {
 
@@ -73,12 +73,13 @@ public class Spieler {
         }
     }
     public void crafteAxt () {
-
+        //TODO implement method
     }
 
     public void verkaufe () {
 
     }
+
     public void showInv () {
         System.out.println("Holz im Inventar: " + holz);
         System.out.println("Stein im Inventar: " + stein);

@@ -3,13 +3,14 @@
  * @version
  */
 
-package com.example.model;
+package com.example.mc_sim_data;
 
-public class Spitzhacke extends Werkzeug{
+public class Spitzhacke extends Werkzeug {
     public Spitzhacke(String material) {
         super(material);
         berechneWert();
     }
+
     @Override
     public void berechneWert() {
         switch (material) {

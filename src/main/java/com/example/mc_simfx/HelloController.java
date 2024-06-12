@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.mc_simfx;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -12,11 +12,11 @@ import javafx.scene.control.ProgressBar;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.example.model.*;
+import com.example.mc_sim_data.*;
 
 public class HelloController implements Initializable {
-    /* fxml attributes */
 
+    /* fxml attributes */
     @FXML
     private BarChart<String, Integer> barchart;
     @FXML
@@ -32,14 +32,23 @@ public class HelloController implements Initializable {
     private XYChart.Data<String, Integer> stone;
     private XYChart.Data<String, Integer> iron;
 
-    private int i;
+    private Spiel game;
+    private Welt world;
+    private Spieler player;
+
     private double progress = 0;
 
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {//runs only one time at the start of the programm
+    public void initialize(URL url, ResourceBundle resourceBundle) { //runs only one time at the start of the programm
         initBarchart();
-        new Spiel().play();
+        game = new Spiel();
+        world = game.getWorld();
+        player = game.getPlayer();
+
+        game.play();
+        world.generieren();
+
 
         timer.start();
 
@@ -63,44 +72,41 @@ public class HelloController implements Initializable {
 
     @FXML
     public void btnSpCraftenClick(ActionEvent event) {
-        Spitzhacke spitzhacke = new Spitzhacke("Holz");
-        wood.setYValue(wood.getYValue() - 10);
-
+        player.crafteSpitzhacke("Holz"); // type needs to be the input
+        // display changes at inventory
     }
 
     @FXML
-    void abbauDelay(ActionEvent event) {
+    public void abbauDelay(ActionEvent event) {
         btnPickaxe.setDisable(true);
         btnAxe.setDisable(true);
         timer.start();
+        player.abbauen();
+        initBarchart();
+        // display changes at inventory
     }
 
     public void initBarchart() {
 
-        barchart.getData().clear();
-
-        wood = new XYChart.Data<>("Wood", 50);
-        stone = new XYChart.Data<>("Stone", 80);
-        iron = new XYChart.Data<>("Iron", 20);
+        wood = new XYChart.Data<>("Wood", world.getGenHolz());
+        stone = new XYChart.Data<>("Stone", world.getGenStein());
+        iron = new XYChart.Data<>("Iron", world.getGenEisen());
 
         worldgen = new XYChart.Series<>();
         worldgen.setName("World Generation");
-        wood.setYValue(20);
 
         worldgen.getData().add(wood);
         worldgen.getData().add(stone);
         worldgen.getData().add(iron);
-        i = 0;
-        barchart.getData().clear();
+
         barchart.getData().addAll(worldgen);
 
     }
 
     public void loadBarchart(XYChart.Series<String, Integer> worldgen) {
-        i++;
         barchart.getData().clear();
-        barchart.getData().addAll(worldgen);
-        //wood.setYValue(i);
+        initBarchart();
+//        wood.setYValue();
     }
 
     public void increaseProgress() {

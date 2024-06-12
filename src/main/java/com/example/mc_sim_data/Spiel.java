@@ -3,9 +3,10 @@
  * @version
  */
 
-package com.example.model;
+package com.example.mc_sim_data;
 
 public class Spiel {
+
     private Welt world;
     private Spieler player;
 
@@ -16,17 +17,17 @@ public class Spiel {
         System.out.println("---------------------------");
         world.generieren();
         System.out.println("---------------------------");
-        player.abbauen();
-        System.out.println("---------------------------");
         world.showMat();
         System.out.println("---------------------------");
         player.showInv();
         System.out.println("---------------------------");
-        player.abbauen();
-        System.out.println("---------------------------");
-        world.showMat();
     }
 
+    public Welt getWorld() {
+        return world;
+    }
 
-
+    public Spieler getPlayer() {
+        return player;
+    }
 }

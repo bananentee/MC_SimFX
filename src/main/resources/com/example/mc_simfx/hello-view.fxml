@@ -13,7 +13,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<SplitPane dividerPositions="0.362876254180602" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.HelloController">
+<SplitPane dividerPositions="0.362876254180602" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mc_simfx.HelloController">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
@@ -29,8 +29,8 @@
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
             <Label layoutX="14.0" layoutY="71.0" text="Spitzhacke craften" />
-            <Button fx:id="btnPickaxe" layoutX="306.0" layoutY="67.0" mnemonicParsing="false" onAction="#btnSpCraftenClick" text="Button" />
-            <Button fx:id="btnAxe" layoutX="306.0" layoutY="105.0" mnemonicParsing="false" text="Button" />
+            <Button fx:id="btnPickaxe" layoutX="311.0" layoutY="67.0" mnemonicParsing="false" onAction="#btnSpCraftenClick" text="Craft" />
+            <Button fx:id="btnAxe" layoutX="311.0" layoutY="105.0" mnemonicParsing="false" text="Craft" />
             <Label layoutX="14.0" layoutY="14.0" text="Coins:" />
             <Label layoutX="14.0" layoutY="109.0" text="Axt Craften" />
             <Button layoutX="300.0" layoutY="364.0" mnemonicParsing="false" onAction="#abbauDelay" text="Abbauen" />
@@ -81,6 +81,7 @@
                   <Image url="@../../../com.example.assets/coin.png" />
                </image>
             </ImageView>
+            <Button layoutX="306.0" layoutY="151.0" mnemonicParsing="false" text="Sell All" />
          </children></AnchorPane>
   </items>
 </SplitPane>

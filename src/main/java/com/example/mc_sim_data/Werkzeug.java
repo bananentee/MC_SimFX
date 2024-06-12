@@ -3,7 +3,7 @@
  * @version
  */
 
-package com.example.model;
+package com.example.mc_sim_data;
 
 public abstract class Werkzeug {
 

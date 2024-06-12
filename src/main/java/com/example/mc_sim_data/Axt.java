@@ -3,7 +3,7 @@
  * @version
  */
 
-package com.example.model;
+package com.example.mc_sim_data;
 
 public class Axt extends Werkzeug {
     public Axt(String material) {
