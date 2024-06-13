@@ -10,10 +10,12 @@ public class Spiel {
     private Welt world;
     private Spieler player;
 
-    public void play() {
+    public Spiel () {
         world = new Welt ();
         player = new Spieler ("Steve",10, world);
+    }
 
+    public void play() {
         System.out.println("---------------------------");
         world.generieren();
         System.out.println("---------------------------");

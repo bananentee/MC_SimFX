@@ -70,4 +70,3 @@ public class Welt {
         return genEisen;
     }
 }
-

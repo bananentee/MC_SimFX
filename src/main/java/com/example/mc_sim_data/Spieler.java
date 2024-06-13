@@ -9,17 +9,20 @@ public class Spieler {
 
     private String name;
     private Welt welt;
+    private Spitzhacke temp;
+
     private int staerke;
     private int coins;
     private int holz;
     private int stein;
     private int eisen;
-    private Spitzhacke temp;
+
 
     public Spieler(String name, int staerke, Welt welt) {
         this.name = name;
         this.staerke = staerke;
         this.welt = welt;
+        this.coins = 0;
     }
 
 
@@ -27,7 +30,7 @@ public class Spieler {
         if (temp != null) {
             if (temp.getMaterial().equals("Holz")) {
                 welt.subStein(staerke + temp.getWert());
-                stein = stein + staerke + temp.getWert();
+                stein += staerke + temp.getWert();
             }
         }
         welt.subHolz(staerke);
@@ -76,8 +79,23 @@ public class Spieler {
         //TODO implement method
     }
 
-    public void verkaufe () {
-
+    public void verkaufe (String type, int quantity) {
+        switch (type) {
+            case "Holz":
+                holz -= quantity;
+                coins += 5 * quantity;
+            case "Stein":
+                stein -= quantity;
+                coins += 10 * quantity;
+            case "Eisen":
+                stein -= quantity;
+                coins += 15 * quantity;
+            case "Alles":
+                coins += (5 * holz) + (10 * stein) + (5 * eisen);
+                holz = 0;
+                stein = 0;
+                eisen = 0;
+        }
     }
 
     public void showInv () {
@@ -90,5 +108,13 @@ public class Spieler {
         holz = 0;
         stein = 0;
         eisen = 0;
+    }
+
+    public int getHolz() {
+        return holz;
+    }
+
+    public int getCoins() {
+        return coins;
     }
 }

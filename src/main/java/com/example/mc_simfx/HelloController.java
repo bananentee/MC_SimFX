@@ -7,12 +7,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.example.mc_sim_data.*;
+import javafx.scene.control.TextField;
 
 public class HelloController implements Initializable {
 
@@ -25,32 +27,38 @@ public class HelloController implements Initializable {
     private Button btnPickaxe;
     @FXML
     private Button btnAxe;
+    @FXML
+    private Button sell_button;
+    @FXML
+    private Label wood_display;
+    @FXML
+    private Label coin_display;
+    @FXML
+    private TextField pickaxe_inputField;
 
-    /* local attributes */
-    private XYChart.Series<String, Integer> worldgen;
-    private XYChart.Data<String, Integer> wood;
-    private XYChart.Data<String, Integer> stone;
-    private XYChart.Data<String, Integer> iron;
-
-    private Spiel game;
     private Welt world;
     private Spieler player;
 
     private double progress = 0;
 
+    private final AnimationTimer timer = new AnimationTimer() { // runs every frame
+        @Override
+        public void handle(long l) {
+            increaseProgress();
+        }
+    };
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) { //runs only one time at the start of the programm
-        initBarchart();
-        game = new Spiel();
+        Spiel game = new Spiel();
         world = game.getWorld();
         player = game.getPlayer();
 
         game.play();
-        world.generieren();
-
-
         timer.start();
+
+        /* beginning of gui innit */
+        initBarchart();
 
 //        BooleanBinding binding = new BooleanBinding() {
 //            @Override
@@ -62,18 +70,14 @@ public class HelloController implements Initializable {
 //        btnAxe.disableProperty().bind(binding);
     }
 
-    private final AnimationTimer timer = new AnimationTimer() { // runs every frame
-        @Override
-        public void handle(long l) {
-            increaseProgress();
-        }
-    };
-
 
     @FXML
     public void btnSpCraftenClick(ActionEvent event) {
-        player.crafteSpitzhacke("Holz"); // type needs to be the input
-        // display changes at inventory
+        System.out.println(pickaxe_inputField.getText());
+        player.crafteSpitzhacke(pickaxe_inputField.getText());
+        pickaxe_inputField.clear();
+        loadNewData();
+
     }
 
     @FXML
@@ -82,17 +86,22 @@ public class HelloController implements Initializable {
         btnAxe.setDisable(true);
         timer.start();
         player.abbauen();
-        initBarchart();
-        // display changes at inventory
+        loadNewData();
+    }
+
+    @FXML
+    public void btnSellAll(ActionEvent event) {
+        player.verkaufe("Alles", -1);
+        loadNewData();
     }
 
     public void initBarchart() {
+        XYChart.Series<String, Integer> worldgen = new XYChart.Series<>();
 
-        wood = new XYChart.Data<>("Wood", world.getGenHolz());
-        stone = new XYChart.Data<>("Stone", world.getGenStein());
-        iron = new XYChart.Data<>("Iron", world.getGenEisen());
+        XYChart.Data<String, Integer> wood = new XYChart.Data<>("Wood", world.getGenHolz());
+        XYChart.Data<String, Integer> stone = new XYChart.Data<>("Stone", world.getGenStein());
+        XYChart.Data<String, Integer> iron = new XYChart.Data<>("Iron", world.getGenEisen());
 
-        worldgen = new XYChart.Series<>();
         worldgen.setName("World Generation");
 
         worldgen.getData().add(wood);
@@ -100,13 +109,13 @@ public class HelloController implements Initializable {
         worldgen.getData().add(iron);
 
         barchart.getData().addAll(worldgen);
-
     }
 
-    public void loadBarchart(XYChart.Series<String, Integer> worldgen) {
+    public void loadNewData() {
         barchart.getData().clear();
         initBarchart();
-//        wood.setYValue();
+        wood_display.setText(Integer.toString(player.getHolz()));
+        coin_display.setText(Integer.toString(player.getCoins()));
     }
 
     public void increaseProgress() {
@@ -123,4 +132,4 @@ public class HelloController implements Initializable {
     }
 }
 
-//TODO implement the real code
+//TODO fix the function of the Pickaxe
