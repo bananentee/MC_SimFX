@@ -1,6 +1,10 @@
 package com.example.mc_simfx;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +19,8 @@ import java.util.ResourceBundle;
 
 import com.example.mc_sim_data.*;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class HelloController implements Initializable {
 
@@ -24,17 +30,13 @@ public class HelloController implements Initializable {
     @FXML
     private ProgressBar progressBar;
     @FXML
-    private Button btnPickaxe;
+    private Button btnAxe, btn_abbauen, btnPickaxe;
     @FXML
-    private Button btnAxe;
-    @FXML
-    private Button sell_button;
-    @FXML
-    private Label wood_display;
-    @FXML
-    private Label coin_display;
+    private Label wood_display, coin_display, stone_display, iron_display;
     @FXML
     private TextField pickaxe_inputField;
+    @FXML
+    private ImageView wood_image, stone_image, iron_image, coin_image;
 
     private Welt world;
     private Spieler player;
@@ -50,6 +52,12 @@ public class HelloController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) { //runs only one time at the start of the programm
+
+        wood_image.setImage(new Image("file:ass/wood_block.png"));
+        stone_image.setImage(new Image("file:ass/stone_block.png"));
+        iron_image.setImage(new Image("file:ass/iron_ore.png"));
+        coin_image.setImage(new Image("file:ass/coin.png"));
+
         Spiel game = new Spiel();
         world = game.getWorld();
         player = game.getPlayer();
@@ -60,14 +68,19 @@ public class HelloController implements Initializable {
         /* beginning of gui innit */
         initBarchart();
 
-//        BooleanBinding binding = new BooleanBinding() {
-//            @Override
-//            protected boolean computeValue() {
-//                return progressBar.progressProperty().getValue() > 0;
-//            }
-//        };
-//        btnPickaxe.disableProperty().bind(binding);
-//        btnAxe.disableProperty().bind(binding);
+        BooleanBinding binding = new BooleanBinding() {
+            {
+                super.bind(progressBar.progressProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return progressBar.progressProperty().getValue() > 0;
+            }
+        };
+        btnPickaxe.disableProperty().bind(binding);
+        btnAxe.disableProperty().bind(binding);
+        btn_abbauen.disableProperty().bind(binding);
     }
 
 
@@ -77,16 +90,14 @@ public class HelloController implements Initializable {
         player.crafteSpitzhacke(pickaxe_inputField.getText());
         pickaxe_inputField.clear();
         loadNewData();
-
     }
 
     @FXML
     public void abbauDelay(ActionEvent event) {
-        btnPickaxe.setDisable(true);
-        btnAxe.setDisable(true);
         timer.start();
-        player.abbauen();
-        loadNewData();
+        MiningListener listener = new MiningListener(progressBar.progressProperty());
+        progressBar.progressProperty().addListener(listener);
+
     }
 
     @FXML
@@ -115,6 +126,8 @@ public class HelloController implements Initializable {
         barchart.getData().clear();
         initBarchart();
         wood_display.setText(Integer.toString(player.getHolz()));
+        stone_display.setText(Integer.toString(player.getStein()));
+        iron_display.setText(Integer.toString(player.getEisen()));
         coin_display.setText(Integer.toString(player.getCoins()));
     }
 
@@ -124,12 +137,29 @@ public class HelloController implements Initializable {
             progress = 0;
             progressBar.setProgress(progress);
             timer.stop();
-            btnPickaxe.setDisable(false);
-            btnAxe.setDisable(false);
+            return;
         }
         progress += 0.005;
         progressBar.setProgress(progress);
-    }
-}
 
-//TODO fix the function of the Pickaxe
+    }
+
+    private class MiningListener implements ChangeListener<Number> {
+
+        private Property propertyToRemoveFrom;
+
+        private MiningListener(Property propertyToRemoveFrom) {
+            this.propertyToRemoveFrom = propertyToRemoveFrom;
+        }
+
+        @Override
+        public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+            if (newValue.doubleValue() >= 1) {
+                player.abbauen();
+                loadNewData();
+                propertyToRemoveFrom.removeListener(this);
+            }
+        }
+    }
+
+}

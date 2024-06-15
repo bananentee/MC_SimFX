@@ -117,4 +117,12 @@ public class Spieler {
     public int getCoins() {
         return coins;
     }
+
+    public int getStein() {
+        return stein;
+    }
+
+    public int getEisen() {
+        return eisen;
+    }
 }
