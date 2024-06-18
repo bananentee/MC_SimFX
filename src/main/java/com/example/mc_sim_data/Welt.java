@@ -6,7 +6,7 @@
 package com.example.mc_sim_data;
 
 public class Welt {
-
+    //TODO implement if values are under 0 to generate new materials etc
     public static int random(int min, int max) {
         int range = max - min + 1;
         return (int) (Math.random() * range) + min;

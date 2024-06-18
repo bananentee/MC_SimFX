@@ -6,7 +6,7 @@
 package com.example.mc_sim_data;
 
 public class Spiel {
-
+    //TODO Adding of real meaningful gameplay!
     private Welt world;
     private Spieler player;
 

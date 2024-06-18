@@ -46,6 +46,7 @@ public class HelloController implements Initializable {
 
 
     // [UPDATE] runs every frame
+    // TODO: FIX ANIMATION TIMER (remove frame dependency) -> https://stackoverflow.com/questions/71471546/how-to-make-a-smooth-time-based-animation-with-javafx-animationtimer
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long l) {
@@ -61,7 +62,6 @@ public class HelloController implements Initializable {
         stone_image.setImage(new Image("file:ass/stone_block.png"));
         iron_image.setImage(new Image("file:ass/iron_ore.png"));
         coin_image.setImage(new Image("file:ass/coin.png"));
-
 
         Spiel game = new Spiel();
         world = game.getWorld();
@@ -103,6 +103,7 @@ public class HelloController implements Initializable {
     }
 
     /* FXML methods */
+    //TODO: Implement btnCraftAxe and Logic in @mc_sim_data
     @FXML
     public void btnSpCraftenClick(ActionEvent event) {
         System.out.println(pickaxe_inputField.getText());
@@ -131,7 +132,7 @@ public class HelloController implements Initializable {
         // second index -> elements of data of world generation
         barchart.getData().get(0).getData().get(0).setYValue(world.getGenHolz());
         barchart.getData().get(0).getData().get(1).setYValue(world.getGenStein());
-        barchart.getData().get(0).getData().get(2).setYValue(world.getGenEisen());//ähem.. sachen
+        barchart.getData().get(0).getData().get(2).setYValue(world.getGenEisen());
 
         // updating of all Labels to their corresponding @mc_sim_data values
         wood_display.setText(Integer.toString(player.getHolz()));
