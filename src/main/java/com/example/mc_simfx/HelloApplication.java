@@ -3,6 +3,7 @@ package com.example.mc_simfx;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -14,8 +15,8 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("Minecraft Simulator");
         stage.setScene(scene);
-        //Image icon = new Image("");
-        //stage.getIcons().add(icon);
+        Image icon = new Image("file:ass/minecraft_logo.png");
+        stage.getIcons().add(icon);
         stage.show();
     }
 
