@@ -46,11 +46,33 @@ public class HelloController implements Initializable {
 
 
     // [UPDATE] runs every frame
-    // TODO: FIX ANIMATION TIMER (remove frame dependency) -> https://stackoverflow.com/questions/71471546/how-to-make-a-smooth-time-based-animation-with-javafx-animationtimer
+
     private final AnimationTimer timer = new AnimationTimer() {
+
+        private long lastRun = 0;
+
         @Override
-        public void handle(long l) {
-            increaseProgress();
+        public void handle(long now) {
+            if (lastRun == 0) {
+                lastRun = now;
+                return;
+            }
+            // If we had 2 JFX frames for 1 screen frame, save a cycle
+            if (now <= lastRun) {
+                return;
+            }
+            // Calculate remaining time until next screen frame (next multiple of frameNs)
+            long rest = now % HelloApplication.getFrameNs();
+            long nextFrame = now;
+            if (rest != 0) {//Fix timing to next screen frame
+                nextFrame += HelloApplication.getFrameNs() - rest;
+            }
+            // Animate
+            double elapsed = (nextFrame - lastRun) / 1e9;
+            double elapsedDecimal = elapsed - (long)elapsed;
+            System.out.println(elapsedDecimal);
+            // Actual code
+            increaseProgress(elapsedDecimal);
         }
     };
 
@@ -141,14 +163,15 @@ public class HelloController implements Initializable {
         coin_display.setText(Integer.toString(player.getCoins()));
     }
 
-    public void increaseProgress() {
+    public void increaseProgress(double elapsedTime) {
+
         if (progress > 1) {
             progress = 0;
             progressBar.setProgress(progress);
             timer.stop();
             return;
         }
-        progress += 0.005;
+        progress += 0.005 * elapsedTime;
         progressBar.setProgress(progress);
     }
 
