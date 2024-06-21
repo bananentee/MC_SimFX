@@ -6,7 +6,6 @@
 package com.example.mc_sim_data;
 
 public class Welt {
-    //TODO implement if values are under 0 to generate new materials etc
     public static int random(int min, int max) {
         int range = max - min + 1;
         return (int) (Math.random() * range) + min;
@@ -30,13 +29,21 @@ public class Welt {
 
     public void generieren() {
         if (genHolz == 0) {
-            genHolz = random(10, 100);
+            genHolz = random(500, 1000);
         } else if (genStein == 0) {
-            genStein = random(50, 100);
+            genStein = random(100, 1000);
         } else if (genEisen == 0) {
-            genEisen = random(1, 20);
+            genEisen = random(10, 200);
         }
         showMat();
+    }
+
+    public void checkGeneration () {
+        if (genHolz <= 0 && genStein <= 0 && genEisen <= 0) {
+            genHolz = 0;
+            genStein = 0;
+            genEisen = 0;
+        }
     }
 
     public void subHolz(int pHolz) {

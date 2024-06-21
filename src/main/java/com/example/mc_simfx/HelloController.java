@@ -46,7 +46,6 @@ public class HelloController implements Initializable {
 
 
     // [UPDATE] runs every frame
-    // TODO: FIX ANIMATION TIMER (remove frame dependency) -> https://stackoverflow.com/questions/71471546/how-to-make-a-smooth-time-based-animation-with-javafx-animationtimer
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long l) {
@@ -137,6 +136,7 @@ public class HelloController implements Initializable {
         // updating of the barchart:
         // first index -> group of data (world generation);
         // second index -> elements of data of world generation
+        world.checkGeneration();
         barchart.getData().get(0).getData().get(0).setYValue(world.getGenHolz());
         barchart.getData().get(0).getData().get(1).setYValue(world.getGenStein());
         barchart.getData().get(0).getData().get(2).setYValue(world.getGenEisen());
