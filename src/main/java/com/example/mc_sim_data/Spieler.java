@@ -40,7 +40,7 @@ public class Spieler {
 
         if (axe != null) {
             welt.subHolz(staerke + axe.getWert());
-            holz += staerke + pickaxe.getWert();
+            holz += staerke + axe.getWert();
         }
 
         welt.subHolz(staerke);
