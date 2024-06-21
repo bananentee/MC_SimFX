@@ -103,7 +103,6 @@ public class HelloController implements Initializable {
     }
 
     /* FXML methods */
-    //TODO: Implement btnCraftAxe and Logic in @mc_sim_data
     @FXML
     public void btnSpCraftenClick(ActionEvent event) {
         System.out.println("PICKAXE: " + pickaxe_inputField.getText());
