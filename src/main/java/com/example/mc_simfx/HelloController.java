@@ -34,7 +34,7 @@ public class HelloController implements Initializable {
     @FXML
     private Label wood_display, coin_display, stone_display, iron_display;
     @FXML
-    private TextField pickaxe_inputField;
+    private TextField pickaxe_inputField, axe_inputField;
     @FXML
     private ImageView wood_image, stone_image, iron_image, coin_image;
 
@@ -54,7 +54,7 @@ public class HelloController implements Initializable {
         }
     };
 
-    // [START] runs only one time at the start of the programm
+    // [START] runs only one time at the start of the program
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         /* image innit */
@@ -106,9 +106,17 @@ public class HelloController implements Initializable {
     //TODO: Implement btnCraftAxe and Logic in @mc_sim_data
     @FXML
     public void btnSpCraftenClick(ActionEvent event) {
-        System.out.println(pickaxe_inputField.getText());
+        System.out.println("PICKAXE: " + pickaxe_inputField.getText());
         player.crafteSpitzhacke(pickaxe_inputField.getText());
         pickaxe_inputField.clear();
+        loadNewData();
+    }
+
+    @FXML
+    public void btnAxeCraftenClick(ActionEvent event) {
+        System.out.println("AXE: " + axe_inputField.getText());
+        player.crafteAxt(axe_inputField.getText());
+        axe_inputField.clear();
         loadNewData();
     }
 

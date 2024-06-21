@@ -30,7 +30,7 @@
          <children>
             <Label layoutX="14.0" layoutY="71.0" text="Spitzhacke craften" />
             <Button fx:id="btnPickaxe" layoutX="311.0" layoutY="67.0" mnemonicParsing="false" onAction="#btnSpCraftenClick" text="Craft" />
-            <Button fx:id="btnAxe" layoutX="311.0" layoutY="105.0" mnemonicParsing="false" text="Craft" />
+            <Button fx:id="btnAxe" layoutX="311.0" layoutY="105.0" mnemonicParsing="false" onAction="#btnAxeCraftenClick" text="Craft" />
             <Label layoutX="14.0" layoutY="14.0" text="Coins:" />
             <Label layoutX="14.0" layoutY="109.0" text="Axt craften" />
             <Button fx:id="btn_abbauen" layoutX="300.0" layoutY="364.0" mnemonicParsing="false" onAction="#abbauDelay" text="Abbauen" />
@@ -74,7 +74,7 @@
             </SplitPane>
             <Label layoutX="16.0" layoutY="155.0" text="Inventory" />
             <Label fx:id="coin_display" layoutX="346.0" layoutY="14.0" text="0" textAlignment="RIGHT" />
-            <TextField layoutX="140.0" layoutY="105.0" />
+            <TextField fx:id="axe_inputField" layoutX="140.0" layoutY="105.0" />
             <TextField fx:id="pickaxe_inputField" layoutX="140.0" layoutY="67.0" />
             <ImageView fx:id="coin_image" fitHeight="20.0" fitWidth="20.0" layoutX="56.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
                <image>

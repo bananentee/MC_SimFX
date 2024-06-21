@@ -9,14 +9,14 @@ public class Spieler {
 
     private String name;
     private Welt welt;
-    private Spitzhacke temp;
+    private Spitzhacke pickaxe;
+    private Axt axe;
 
     private int staerke;
     private int coins;
     private int holz;
     private int stein;
     private int eisen;
-
 
     public Spieler(String name, int staerke, Welt welt) {
         this.name = name;
@@ -25,14 +25,24 @@ public class Spieler {
         this.coins = 0;
     }
 
-
     public void abbauen () {
-        if (temp != null) {
-            if (temp.getMaterial().equals("Holz")) {
-                welt.subStein(staerke + temp.getWert());
-                stein += staerke + temp.getWert();
+        if (pickaxe != null) {
+            if (pickaxe.getMaterial().equals("Holz")) {
+                welt.subStein(staerke + pickaxe.getWert());
+                stein += staerke + pickaxe.getWert();
+            } else {
+                welt.subStein(staerke + pickaxe.getWert());
+                stein += staerke + pickaxe.getWert();
+                welt.subEisen(staerke + pickaxe.getWert());
+                eisen += staerke + pickaxe.getWert();
             }
         }
+
+        if (axe != null) {
+            welt.subHolz(staerke + axe.getWert());
+            holz += staerke + pickaxe.getWert();
+        }
+
         welt.subHolz(staerke);
         holz += staerke;
 
@@ -46,8 +56,8 @@ public class Spieler {
                     System.out.println("keine Spitzhacke kann erstellt werden");
                 } else {
                     holz -= 5;
-                    temp = null;
-                    temp = new Spitzhacke(type);
+                    pickaxe = null;
+                    pickaxe = new Spitzhacke(type);
                 }
                 break;
             case "Stein":
@@ -56,8 +66,8 @@ public class Spieler {
                 } else {
                     holz -= 10;
                     stein -= 5;
-                    temp = null;
-                    temp = new Spitzhacke(type);
+                    pickaxe = null;
+                    pickaxe = new Spitzhacke(type);
                 }
                 break;
             case "Eisen":
@@ -67,16 +77,49 @@ public class Spieler {
                     holz -= 20;
                     stein -= 10;
                     eisen -= 5;
-                    temp = null;
-                    temp = new Spitzhacke(type);
+                    pickaxe = null;
+                    pickaxe = new Spitzhacke(type);
                 }
                 break;
             default:
                 System.out.println("falscher Name wurde angegeben");
         }
     }
-    public void crafteAxt () {
-        //TODO implement method
+    public void crafteAxt (String type) {
+        switch (type) {
+            case "Holz":
+                if (holz <= 5) {
+                    System.out.println("keine Axt kann erstellt werden");
+                } else {
+                    holz -= 5;
+                    axe = null;
+                    axe = new Axt(type);
+                }
+                break;
+            case "Stein":
+                if (holz <= 10 && stein <= 5) {
+                    System.out.println("keine Axt kann erstellt werden");
+                } else {
+                    holz -= 10;
+                    stein -= 5;
+                    axe = null;
+                    axe = new Axt(type);
+                }
+                break;
+            case "Eisen":
+                if (holz <= 20 && stein <= 10 && eisen <= 5) {
+                    System.out.println("keine Axt kann erstellt werden");
+                } else {
+                    holz -= 20;
+                    stein -= 10;
+                    eisen -= 5;
+                    axe = null;
+                    axe = new Axt(type);
+                }
+                break;
+            default:
+                System.out.println("falscher Name wurde angegeben");
+        }
     }
 
     public void verkaufe (String type, int quantity) {
@@ -99,6 +142,7 @@ public class Spieler {
     }
 
     public void showInv () {
+        System.out.println("----------------------");
         System.out.println("Holz im Inventar: " + holz);
         System.out.println("Stein im Inventar: " + stein);
         System.out.println("Eisen im Inventar: " + eisen);
