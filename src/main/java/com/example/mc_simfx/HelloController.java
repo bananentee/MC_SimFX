@@ -1,5 +1,6 @@
 package com.example.mc_simfx;
 
+import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.Property;
@@ -43,6 +44,18 @@ public class HelloController implements Initializable {
     private Spieler player;
 
     private double progress = 0;
+    private Animation animation = new Animation() {
+        @Override
+        public void playFromStart() {
+
+        }
+        public void doPlayTo(long var1, long var3) {
+
+        }
+        public void doJumpTo(long var1, long var3, boolean var5) {
+
+        }
+    }
 
 
     // [UPDATE] runs every frame
