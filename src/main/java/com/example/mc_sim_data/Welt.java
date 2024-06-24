@@ -16,32 +16,36 @@ public class Welt {
     private int genEisen;
 
     public Welt() {
-        genHolz = random(10, 100);
-        genStein = random(50, 100);
-        genEisen = random(1, 20);
-    }
-
-    public void showMat() {
-        System.out.println("generiertes Holz: " + genHolz);
-        System.out.println("generiertes Stein: " + genStein);
-        System.out.println("generiertes Eisen: " + genEisen);
+        genHolz = 0;
+        genStein = 0;
+        genEisen = 0;
+        generieren();
     }
 
     public void generieren() {
         if (genHolz == 0) {
-            genHolz = random(500, 1000);
-        } else if (genStein == 0) {
-            genStein = random(100, 1000);
-        } else if (genEisen == 0) {
-            genEisen = random(10, 200);
+            genHolz = random(100, 200);
         }
-        showMat();
+        if (genStein == 0) {
+            genStein = random(50, 100);
+        }
+        if (genEisen == 0) {
+            genEisen = random(10, 20);
+        }
+        System.out.println("[WORLD] World Generation");
+        System.out.println("|| generiertes Holz: " + genHolz);
+        System.out.println("|| generiertes Stein: " + genStein);
+        System.out.println("|| generiertes Eisen: " + genEisen);
     }
 
     public void checkGeneration () {
-        if (genHolz <= 0 && genStein <= 0 && genEisen <= 0) {
+        if (genHolz <= 0) {
             genHolz = 0;
+        }
+        if (genStein <= 0) {
             genStein = 0;
+        }
+        if (genEisen <= 0) {
             genEisen = 0;
         }
     }
@@ -58,11 +62,6 @@ public class Welt {
         genEisen -= pEisen;
     }
 
-    public void resetMat() {
-        genHolz = 0;
-        genStein = 0;
-        genEisen = 0;
-    }
 
     /* Getters and Setters */
     public int getGenHolz() {

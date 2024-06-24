@@ -27,24 +27,36 @@ public class Spieler {
 
     public void abbauen () {
         if (pickaxe != null) {
-            if (pickaxe.getMaterial().equals("Holz")) {
-                welt.subStein(staerke + pickaxe.getWert());
-                stein += staerke + pickaxe.getWert();
+            int power = staerke + pickaxe.getWert();
+            if (welt.getGenStein() <= 0) {
+                System.out.println("[PLAYER] Stein gibt es nicht mehr!");
             } else {
-                welt.subStein(staerke + pickaxe.getWert());
-                stein += staerke + pickaxe.getWert();
-                welt.subEisen(staerke + pickaxe.getWert());
-                eisen += staerke + pickaxe.getWert();
+                if (pickaxe.getMaterial().equals("Holz")) {
+                    stein += power;
+                    welt.subStein(power);
+                } else { // if material is equal to stone or iron
+                    stein += power;
+                    welt.subStein(power);
+                    if (welt.getGenEisen() <= 0) {
+                        System.out.println("[PLAYER] Eisen gibt es nicht mehr!");
+                    } else {
+                        eisen += power;
+                        welt.subEisen(power);
+                    }
+                }
             }
         }
 
-        if (axe != null) {
-            welt.subHolz(staerke + axe.getWert());
-            holz += staerke + axe.getWert();
+        if (welt.getGenHolz() <= 0) {
+            System.out.println("[PLAYER] Holz gibt es nicht mehr!");
+        } else {
+            if (axe != null) {
+                holz += staerke + axe.getWert();
+                welt.subHolz(staerke + axe.getWert());
+            }
+            holz += staerke;
+            welt.subHolz(staerke);
         }
-
-        welt.subHolz(staerke);
-        holz += staerke;
 
         showInv();
     }
@@ -53,7 +65,7 @@ public class Spieler {
         switch (type) {
             case "Holz":
                 if (holz <= 5) {
-                    System.out.println("keine Spitzhacke kann erstellt werden");
+                    System.out.println("[PLAYER] Keine Spitzhacke kann erstellt werden");
                 } else {
                     holz -= 5;
                     pickaxe = null;
@@ -62,7 +74,7 @@ public class Spieler {
                 break;
             case "Stein":
                 if (holz <= 10 && stein <= 5) {
-                    System.out.println("keine Spitzhacke kann erstellt werden");
+                    System.out.println("[PLAYER] Keine Spitzhacke kann erstellt werden");
                 } else {
                     holz -= 10;
                     stein -= 5;
@@ -72,7 +84,7 @@ public class Spieler {
                 break;
             case "Eisen":
                 if (holz <= 20 && stein <= 10 && eisen <= 5) {
-                    System.out.println("keine Spitzhacke kann erstellt werden");
+                    System.out.println("[PLAYER] Keine Spitzhacke kann erstellt werden");
                 } else {
                     holz -= 20;
                     stein -= 10;
@@ -82,14 +94,15 @@ public class Spieler {
                 }
                 break;
             default:
-                System.out.println("falscher Name wurde angegeben");
+                System.out.println("[PLAYER] Falscher Name wurde angegeben");
         }
     }
+
     public void crafteAxt (String type) {
         switch (type) {
             case "Holz":
                 if (holz <= 5) {
-                    System.out.println("keine Axt kann erstellt werden");
+                    System.out.println("[PLAYER] Keine Axt kann erstellt werden");
                 } else {
                     holz -= 5;
                     axe = null;
@@ -98,7 +111,7 @@ public class Spieler {
                 break;
             case "Stein":
                 if (holz <= 10 && stein <= 5) {
-                    System.out.println("keine Axt kann erstellt werden");
+                    System.out.println("[PLAYER] Keine Axt kann erstellt werden");
                 } else {
                     holz -= 10;
                     stein -= 5;
@@ -108,7 +121,7 @@ public class Spieler {
                 break;
             case "Eisen":
                 if (holz <= 20 && stein <= 10 && eisen <= 5) {
-                    System.out.println("keine Axt kann erstellt werden");
+                    System.out.println("[PLAYER] Keine Axt kann erstellt werden");
                 } else {
                     holz -= 20;
                     stein -= 10;
@@ -118,7 +131,7 @@ public class Spieler {
                 }
                 break;
             default:
-                System.out.println("falscher Name wurde angegeben");
+                System.out.println("[PLAYER] Falscher Name wurde angegeben");
         }
     }
 
@@ -148,12 +161,6 @@ public class Spieler {
         System.out.println("Eisen im Inventar: " + eisen);
     }
 
-    public void resetInv () {
-        holz = 0;
-        stein = 0;
-        eisen = 0;
-    }
-
     public int getHolz() {
         return holz;
     }
@@ -168,5 +175,13 @@ public class Spieler {
 
     public int getEisen() {
         return eisen;
+    }
+
+    public Spitzhacke getPickaxe() {
+        return pickaxe;
+    }
+
+    public Axt getAxe() {
+        return axe;
     }
 }

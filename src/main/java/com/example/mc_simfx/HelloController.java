@@ -36,7 +36,7 @@ public class HelloController implements Initializable {
     @FXML
     private TextField pickaxe_inputField, axe_inputField;
     @FXML
-    private ImageView wood_image, stone_image, iron_image, coin_image;
+    private ImageView wood_image, stone_image, iron_image, coin_image, axe_image, pickaxe_image;
 
     /* local attributes */
     private Welt world;
@@ -66,7 +66,6 @@ public class HelloController implements Initializable {
         world = game.getWorld();
         player = game.getPlayer();
 
-        game.play();
         timer.start();
 
         /* beginning of barchart innit */
@@ -106,6 +105,15 @@ public class HelloController implements Initializable {
     public void btnSpCraftenClick(ActionEvent event) {
         System.out.println("PICKAXE: " + pickaxe_inputField.getText());
         player.crafteSpitzhacke(pickaxe_inputField.getText());
+        if (player.getPickaxe() != null) {
+            switch (player.getPickaxe().getMaterial()) {
+                case "Holz" -> pickaxe_image.setImage(new Image("file:ass/wooden_pickaxe.png"));
+                case "Stein" -> pickaxe_image.setImage(new Image("file:ass/stone_pickaxe.png"));
+                case "Eisen" -> pickaxe_image.setImage(new Image("file:ass/iron_pickaxe.png"));
+            }
+        } else {
+            System.out.println("[SYSTEM] Keine Spitzhacke vorhanden");
+        }
         pickaxe_inputField.clear();
         loadNewData();
     }
@@ -114,15 +122,26 @@ public class HelloController implements Initializable {
     public void btnAxeCraftenClick(ActionEvent event) {
         System.out.println("AXE: " + axe_inputField.getText());
         player.crafteAxt(axe_inputField.getText());
+        if (player.getAxe() != null) {
+            switch (player.getAxe().getMaterial()) {
+                case "Holz" -> axe_image.setImage(new Image("file:ass/wooden_axe.png"));
+                case "Stein" -> axe_image.setImage(new Image("file:ass/stone_axe.png"));
+                case "Eisen" -> axe_image.setImage(new Image("file:ass/iron_axe.png"));
+            }
+        } else {
+            System.out.println("[SYSTEM] Keine Axt vorhanden");
+        }
         axe_inputField.clear();
         loadNewData();
     }
 
     @FXML
     public void abbauDelay(ActionEvent event) {
+        // TODO after a random amount of clicks the world should be regenerated
         timer.start();
         MiningListener listener = new MiningListener(progressBar.progressProperty());
         progressBar.progressProperty().addListener(listener);
+        loadNewData();
     }
 
     @FXML

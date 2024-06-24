@@ -15,16 +15,6 @@ public class Spiel {
         player = new Spieler ("Steve",10, world);
     }
 
-    public void play() {
-        System.out.println("---------------------------");
-        world.generieren();
-        System.out.println("---------------------------");
-        world.showMat();
-        System.out.println("---------------------------");
-        player.showInv();
-        System.out.println("---------------------------");
-    }
-
     public Welt getWorld() {
         return world;
     }
