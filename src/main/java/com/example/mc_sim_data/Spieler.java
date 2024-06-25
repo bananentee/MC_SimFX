@@ -7,19 +7,17 @@ package com.example.mc_sim_data;
 
 public class Spieler {
 
-    private String name;
-    private Welt welt;
+    private final Welt welt;
     private Spitzhacke pickaxe;
     private Axt axe;
 
-    private int staerke;
+    private final int staerke;
     private int coins;
     private int holz;
     private int stein;
     private int eisen;
 
-    public Spieler(String name, int staerke, Welt welt) {
-        this.name = name;
+    public Spieler(int staerke, Welt welt) {
         this.staerke = staerke;
         this.welt = welt;
         this.coins = 0;
@@ -64,33 +62,33 @@ public class Spieler {
     public void crafteSpitzhacke(String type) {
         switch (type) {
             case "Holz":
-                if (holz <= 5) {
-                    System.out.println("[PLAYER] Keine Spitzhacke kann erstellt werden");
-                } else {
+                if (holz >= 5) {
                     holz -= 5;
                     pickaxe = null;
                     pickaxe = new Spitzhacke(type);
+                } else {
+                    System.out.println("[PLAYER] Keine Spitzhacke kann erstellt werden");
                 }
                 break;
             case "Stein":
-                if (holz <= 10 && stein <= 5) {
-                    System.out.println("[PLAYER] Keine Spitzhacke kann erstellt werden");
-                } else {
+                if (holz >= 10 && stein >= 5) {
                     holz -= 10;
                     stein -= 5;
                     pickaxe = null;
                     pickaxe = new Spitzhacke(type);
+                } else {
+                    System.out.println("[PLAYER] Keine Spitzhacke kann erstellt werden");
                 }
                 break;
             case "Eisen":
-                if (holz <= 20 && stein <= 10 && eisen <= 5) {
-                    System.out.println("[PLAYER] Keine Spitzhacke kann erstellt werden");
-                } else {
+                if (holz >= 20 && stein >= 10 && eisen >= 5) {
                     holz -= 20;
                     stein -= 10;
                     eisen -= 5;
                     pickaxe = null;
                     pickaxe = new Spitzhacke(type);
+                } else {
+                    System.out.println("[PLAYER] Keine Spitzhacke kann erstellt werden");
                 }
                 break;
             default:
@@ -101,33 +99,33 @@ public class Spieler {
     public void crafteAxt (String type) {
         switch (type) {
             case "Holz":
-                if (holz <= 5) {
-                    System.out.println("[PLAYER] Keine Axt kann erstellt werden");
-                } else {
+                if (holz >= 5) {
                     holz -= 5;
                     axe = null;
                     axe = new Axt(type);
+                } else {
+                    System.out.println("[PLAYER] Keine Axt kann erstellt werden");
                 }
                 break;
             case "Stein":
-                if (holz <= 10 && stein <= 5) {
-                    System.out.println("[PLAYER] Keine Axt kann erstellt werden");
-                } else {
+                if (holz >= 10 && stein >= 5) {
                     holz -= 10;
                     stein -= 5;
                     axe = null;
                     axe = new Axt(type);
+                } else {
+                    System.out.println("[PLAYER] Keine Axt kann erstellt werden");
                 }
                 break;
             case "Eisen":
-                if (holz <= 20 && stein <= 10 && eisen <= 5) {
-                    System.out.println("[PLAYER] Keine Axt kann erstellt werden");
-                } else {
+                if (holz >= 20 && stein >= 10 && eisen >= 5) {
                     holz -= 20;
                     stein -= 10;
                     eisen -= 5;
                     axe = null;
                     axe = new Axt(type);
+                } else {
+                    System.out.println("[PLAYER] Keine Axt kann erstellt werden");
                 }
                 break;
             default:

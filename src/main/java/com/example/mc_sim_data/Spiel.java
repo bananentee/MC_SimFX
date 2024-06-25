@@ -7,12 +7,12 @@ package com.example.mc_sim_data;
 
 public class Spiel {
     //TODO Adding of real meaningful gameplay!
-    private Welt world;
-    private Spieler player;
+    private final Welt world;
+    private final Spieler player;
 
     public Spiel () {
         world = new Welt ();
-        player = new Spieler ("Steve",10, world);
+        player = new Spieler (10, world);
     }
 
     public Welt getWorld() {
