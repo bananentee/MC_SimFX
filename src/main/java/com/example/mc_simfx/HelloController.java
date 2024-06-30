@@ -30,7 +30,7 @@ public class HelloController implements Initializable  {
     @FXML
     private ProgressBar progressBar;
     @FXML
-    private Button btnAxe, btn_abbauen, btnPickaxe;
+    private Button btnAxe, btn_abbauen, btnPickaxe, btn_delay_upgrade, btn_wordlgen_upgrade;
     @FXML
     private Label wood_display, coin_display, stone_display, iron_display;
     @FXML
@@ -42,7 +42,9 @@ public class HelloController implements Initializable  {
     private Welt world;
     private Spieler player;
 
-    private double progress = 0;
+    private double progress;
+    private double progressFactor;
+    private int level;
 
 
     // [UPDATE] runs every frame
@@ -78,6 +80,12 @@ public class HelloController implements Initializable  {
         Spiel game = new Spiel();
         world = game.getWorld();
         player = game.getPlayer();
+
+        progress = 0;
+        progressFactor = 1;
+        level = 0;
+
+        btn_delay_upgrade.setText("Upgrade Cost: 200");
 
         /* start of the timers */
         timer.start();
@@ -164,6 +172,27 @@ public class HelloController implements Initializable  {
         loadNewData();
     }
 
+    @FXML
+    public void btnUpgradeDelay(ActionEvent event) {
+        level++;
+        for (int i = 0; i < level; i++) {
+            if (player.kaufe(200 + 200 * i)) { // maybe remove for loop?
+                progressFactor = progressFactor + (i + 1);
+                btn_delay_upgrade.setText("Upgrade Cost: " + (200 + 200 * (i + 1)));
+            } else {
+                System.out.println("[SYSTEM] Nicht genug Coins!");
+            }
+        }
+        loadNewData();
+    }
+
+    @FXML
+    public void btnUpgradeWorldGen(ActionEvent event) {
+
+    }
+
+
+
     /* local methods */
     public void loadNewData() {
         // updating of the barchart:
@@ -188,7 +217,7 @@ public class HelloController implements Initializable  {
             timer.stop();
             return;
         }
-        progress += 0.005;
+        progress += 0.005 * progressFactor;
         progressBar.setProgress(progress);
     }
 

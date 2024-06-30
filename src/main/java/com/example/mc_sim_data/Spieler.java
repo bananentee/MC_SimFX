@@ -152,6 +152,15 @@ public class Spieler {
         }
     }
 
+    public boolean kaufe (int coins) {
+        if (this.coins > coins) {
+            this.coins -= coins;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void showInv () {
         System.out.println("----------------------");
         System.out.println("Holz im Inventar: " + holz);
