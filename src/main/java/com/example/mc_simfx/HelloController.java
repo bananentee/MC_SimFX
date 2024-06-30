@@ -1,6 +1,5 @@
 package com.example.mc_simfx;
 
-import javafx.animation.AnimationTimer;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
@@ -43,19 +42,40 @@ public class HelloController implements Initializable {
     private Spieler player;
 
     private double progress = 0;
+    private long frameCounter = 0;
 
 
     // [UPDATE] runs every frame
-    private final AnimationTimer timer = new AnimationTimer() {
-        @Override
-        public void handle(long l) {
+//    private final AnimationTimer timer = new AnimationTimer() {
+//        @Override
+//        public void handle(long l) {
+//
+//            frameCounter++;
+//        }
+//    };
+
+    private final Timer timer = new Timer();
+    private final TimerTask progress_task = new TimerTask() {
+        public void run(){
             increaseProgress();
         }
     };
 
+    private final TimerTask countdown_task = new TimerTask() {
+        int i = 60;
+        public void run(){
+            if (i >= 0) {
+                System.out.println("Timer " + i--);
+            }
+        }
+    };
+
+
     // [START] runs only one time at the start of the program
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
         /* image innit */
         wood_image.setImage(new Image("file:ass/wood_block.png"));
         stone_image.setImage(new Image("file:ass/stone_block.png"));
@@ -66,7 +86,10 @@ public class HelloController implements Initializable {
         world = game.getWorld();
         player = game.getPlayer();
 
-        timer.start();
+        /* start of the timers */
+
+        timer.scheduleAtFixedRate(progress_task, 0, 16);
+        timer.scheduleAtFixedRate(countdown_task, 0, 1000);
 
         /* beginning of barchart innit */
         XYChart.Series<String, Integer> worldgen = new XYChart.Series<>();
@@ -138,7 +161,7 @@ public class HelloController implements Initializable {
     @FXML
     public void abbauDelay(ActionEvent event) {
         // TODO after a random amount of clicks the world should be regenerated
-        timer.start();
+//        timer.start();
         MiningListener listener = new MiningListener(progressBar.progressProperty());
         progressBar.progressProperty().addListener(listener);
         loadNewData();
@@ -171,9 +194,10 @@ public class HelloController implements Initializable {
         if (progress > 1) {
             progress = 0;
             progressBar.setProgress(progress);
-            timer.stop();
+            countdown_task.cancel();
             return;
         }
+        timer.scheduleAtFixedRate(countdown_task,0,16);
         progress += 0.005;
         progressBar.setProgress(progress);
     }
