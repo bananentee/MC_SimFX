@@ -22,7 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class HelloController implements Initializable  {
+public class HelloController implements Initializable {
 
     /* FXML attributes */
     @FXML
@@ -32,7 +32,7 @@ public class HelloController implements Initializable  {
     @FXML
     private Button btnAxe, btn_abbauen, btnPickaxe, btn_delay_upgrade, btn_wordlgen_upgrade;
     @FXML
-    private Label wood_display, coin_display, stone_display, iron_display;
+    private Label wood_display, coin_display, stone_display, iron_display, worldgen_timer;
     @FXML
     private TextField pickaxe_inputField, axe_inputField;
     @FXML
@@ -45,6 +45,7 @@ public class HelloController implements Initializable  {
     private double progress;
     private double progressFactor;
     private int level;
+    private int total_sec = 300;
 
 
     // [UPDATE] runs every frame
@@ -57,11 +58,30 @@ public class HelloController implements Initializable  {
 
     private final Timer countdown_timer = new Timer();
     private final TimerTask countdown_task = new TimerTask() {
-        int i = 60;
-        public synchronized void run(){
-            if (i >= 0) {
-                System.out.println("Timer " + i--);
+        int seconds = 60;
+        int minutes = total_sec / 60;
+
+        public synchronized void run() {
+            if (total_sec >= 0) {
+                if (total_sec % 60 == 0) {
+                    minutes--;
+                    seconds = 60;
+                }
+                if (seconds != 0) {
+                    seconds--;
+                    System.out.println(minutes + ":" + getSeconds(seconds)); //TODO add listener to label
+                    total_sec--;
+                }
+                btn_wordlgen_upgrade.setDisable(true); // TODO add binding
             }
+            btn_wordlgen_upgrade.setDisable(false);
+        }
+
+        private String getSeconds(int seconds) {
+            if (seconds < 10) {
+                return "0" + seconds;
+            }
+            return Integer.toString(seconds);
         }
     };
 
@@ -69,7 +89,6 @@ public class HelloController implements Initializable  {
     // [START] runs only one time at the start of the program
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
 
         /* image innit */
         wood_image.setImage(new Image("file:ass/wood_block.png"));
@@ -175,22 +194,20 @@ public class HelloController implements Initializable  {
     @FXML
     public void btnUpgradeDelay(ActionEvent event) {
         level++;
-        for (int i = 0; i < level; i++) {
-            if (player.kaufe(200 + 200 * i)) { // maybe remove for loop?
-                progressFactor = progressFactor + (i + 1);
-                btn_delay_upgrade.setText("Upgrade Cost: " + (200 + 200 * (i + 1)));
-            } else {
-                System.out.println("[SYSTEM] Nicht genug Coins!");
-            }
+        if (player.kaufe(200 + 200 * level)) { // maybe remove for loop?
+            progressFactor = progressFactor + (level + 1);
+            btn_delay_upgrade.setText("Upgrade Cost: " + (200 + 200 * (level + 1)));
+        } else {
+            System.out.println("[SYSTEM] Nicht genug Coins!");
         }
         loadNewData();
     }
 
     @FXML
     public void btnUpgradeWorldGen(ActionEvent event) {
+        player.kaufe(200);
 
     }
-
 
 
     /* local methods */
