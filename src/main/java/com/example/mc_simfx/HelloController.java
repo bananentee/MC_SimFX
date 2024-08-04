@@ -1,11 +1,12 @@
 package com.example.mc_simfx;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -30,9 +31,9 @@ public class HelloController implements Initializable {
     @FXML
     private ProgressBar progressBar;
     @FXML
-    private Button btnAxe, btn_abbauen, btnPickaxe, btn_delay_upgrade, btn_wordlgen_upgrade;
+    private Button btn_axe, btn_pickaxe, btn_abbauen, btn_delay_upgrade, btn_worldGen_upgrade;
     @FXML
-    private Label wood_display, coin_display, stone_display, iron_display, worldgen_timer;
+    private Label wood_display, coin_display, stone_display, iron_display, worldGen_timer_display;
     @FXML
     private TextField pickaxe_inputField, axe_inputField;
     @FXML
@@ -45,8 +46,7 @@ public class HelloController implements Initializable {
     private double progress;
     private double progressFactor;
     private int level;
-    private int total_sec = 300;
-
+    private int total_sec = 5;
 
     // [UPDATE] runs every frame
     private final AnimationTimer timer = new AnimationTimer() {
@@ -62,19 +62,27 @@ public class HelloController implements Initializable {
         int minutes = total_sec / 60;
 
         public synchronized void run() {
-            if (total_sec >= 0) {
+            if (total_sec < 60) {
+                seconds = total_sec;
+            }
+            if (total_sec > 0) {
                 if (total_sec % 60 == 0) {
                     minutes--;
                     seconds = 60;
                 }
                 if (seconds != 0) {
-                    seconds--;
-                    System.out.println(minutes + ":" + getSeconds(seconds)); //TODO add listener to label
                     total_sec--;
+                    seconds--;
+                    Platform.runLater(() -> worldGen_timer_display.setText(minutes + ":" + getSeconds(seconds)));
+                    Platform.runLater(() -> btn_worldGen_upgrade.setDisable(true));
                 }
-                btn_wordlgen_upgrade.setDisable(true); // TODO add binding
+            } else {
+                Platform.runLater(() -> worldGen_timer_display.setText("0:00"));
+                total_sec = 0;
+                countdown_timer.cancel(); //TODO Fix that a new TimerTask can be scheduled to the Timer (line 220)
+                countdown_timer.purge();
+                Platform.runLater(() -> btn_worldGen_upgrade.setDisable(false));
             }
-            btn_wordlgen_upgrade.setDisable(false);
         }
 
         private String getSeconds(int seconds) {
@@ -96,37 +104,42 @@ public class HelloController implements Initializable {
         iron_image.setImage(new Image("file:ass/iron_ore.png"));
         coin_image.setImage(new Image("file:ass/coin.png"));
 
-        Spiel game = new Spiel();
+        /* innit of local attributes */
+        Spiel game = new Spiel(200, 500);
         world = game.getWorld();
         player = game.getPlayer();
+        SimpleIntegerProperty integerProperty = new SimpleIntegerProperty(total_sec);
+        integerProperty.add(total_sec);
 
         progress = 0;
         progressFactor = 1;
         level = 0;
+        player.setCoins(10000);
 
         btn_delay_upgrade.setText("Upgrade Cost: 200");
+        btn_worldGen_upgrade.setText("Cost: 500");
 
         /* start of the timers */
         timer.start();
         countdown_timer.scheduleAtFixedRate(countdown_task, 0, 1000);
 
-        /* beginning of barchart innit */
-        XYChart.Series<String, Integer> worldgen = new XYChart.Series<>();
+        /* barchart innit */
+        XYChart.Series<String, Integer> worldGen = new XYChart.Series<>();
 
         XYChart.Data<String, Integer> wood = new XYChart.Data<>("Wood", world.getGenHolz());
         XYChart.Data<String, Integer> stone = new XYChart.Data<>("Stone", world.getGenStein());
         XYChart.Data<String, Integer> iron = new XYChart.Data<>("Iron", world.getGenEisen());
 
-        worldgen.setName("World Generation");
+        worldGen.setName("World Generation");
 
-        worldgen.getData().add(wood);
-        worldgen.getData().add(stone);
-        worldgen.getData().add(iron);
+        worldGen.getData().add(wood);
+        worldGen.getData().add(stone);
+        worldGen.getData().add(iron);
+        barchart.getData().add(worldGen);
 
-        barchart.getData().addAll(worldgen);
-
+        /* bindings */
         // disable the function of all buttons when the delay is loading
-        BooleanBinding binding = new BooleanBinding() {
+        BooleanBinding progress_binding = new BooleanBinding() {
             {
                 super.bind(progressBar.progressProperty());
             }
@@ -137,14 +150,14 @@ public class HelloController implements Initializable {
             }
         };
 
-        btnPickaxe.disableProperty().bind(binding);
-        btnAxe.disableProperty().bind(binding);
-        btn_abbauen.disableProperty().bind(binding);
+        btn_pickaxe.disableProperty().bind(progress_binding);
+        btn_axe.disableProperty().bind(progress_binding);
+        btn_abbauen.disableProperty().bind(progress_binding);
     }
 
     /* FXML methods */
     @FXML
-    public void btnSpCraftenClick(ActionEvent event) {
+    public void btnCraftPickaxe() {
         System.out.println("PICKAXE: " + pickaxe_inputField.getText());
         player.crafteSpitzhacke(pickaxe_inputField.getText());
         if (player.getPickaxe() != null) {
@@ -153,15 +166,13 @@ public class HelloController implements Initializable {
                 case "Stein" -> pickaxe_image.setImage(new Image("file:ass/stone_pickaxe.png"));
                 case "Eisen" -> pickaxe_image.setImage(new Image("file:ass/iron_pickaxe.png"));
             }
-        } else {
-            System.out.println("[SYSTEM] Keine Spitzhacke vorhanden");
-        }
+        } else System.out.println("[SYSTEM] Keine Spitzhacke vorhanden");
         pickaxe_inputField.clear();
         loadNewData();
     }
 
     @FXML
-    public void btnAxeCraftenClick(ActionEvent event) {
+    public void btnCraftAxe() {
         System.out.println("AXE: " + axe_inputField.getText());
         player.crafteAxt(axe_inputField.getText());
         if (player.getAxe() != null) {
@@ -170,15 +181,13 @@ public class HelloController implements Initializable {
                 case "Stein" -> axe_image.setImage(new Image("file:ass/stone_axe.png"));
                 case "Eisen" -> axe_image.setImage(new Image("file:ass/iron_axe.png"));
             }
-        } else {
-            System.out.println("[SYSTEM] Keine Axt vorhanden");
-        }
+        } else System.out.println("[SYSTEM] Keine Axt vorhanden");
         axe_inputField.clear();
         loadNewData();
     }
 
     @FXML
-    public void abbauDelay(ActionEvent event) {
+    public void abbauDelay() {
         timer.start();
         MiningListener listener = new MiningListener(progressBar.progressProperty());
         progressBar.progressProperty().addListener(listener);
@@ -186,17 +195,18 @@ public class HelloController implements Initializable {
     }
 
     @FXML
-    public void btnSellAll(ActionEvent event) {
+    public void btnSellAll() {
         player.verkaufe("Alles", -1);
         loadNewData();
     }
 
     @FXML
-    public void btnUpgradeDelay(ActionEvent event) {
-        level++;
-        if (player.kaufe(200 + 200 * level)) { // maybe remove for loop?
-            progressFactor = progressFactor + (level + 1);
-            btn_delay_upgrade.setText("Upgrade Cost: " + (200 + 200 * (level + 1)));
+    public void btnUpgradeDelay() {
+        if (player.kaufe(200 + 200 * (level * level))) {
+            level++;
+            progressFactor = progressFactor + level;
+            btn_delay_upgrade.setText("Upgrade Cost: " + (200 + 200 * (level * level)));
+            btn_worldGen_upgrade.setText("Cost: " + (500 + 500 * level));
         } else {
             System.out.println("[SYSTEM] Nicht genug Coins!");
         }
@@ -204,9 +214,14 @@ public class HelloController implements Initializable {
     }
 
     @FXML
-    public void btnUpgradeWorldGen(ActionEvent event) {
-        player.kaufe(200);
-
+    public void btnUpgradeWorldGen() {
+        if (player.kaufe(500 + 500 * level)) {
+            world.generieren(200 + (200 * level) / 2, 500 + (500 * level) / 2);
+            Platform.runLater(() -> countdown_timer.scheduleAtFixedRate(countdown_task, 0, 1000));
+        } else {
+            System.out.println("[SYSTEM] Nicht genug Coins!");
+        }
+        loadNewData();
     }
 
 

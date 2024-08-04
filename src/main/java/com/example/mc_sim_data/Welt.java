@@ -15,23 +15,19 @@ public class Welt {
     private int genStein;
     private int genEisen;
 
-    public Welt() {
+    public Welt(int min, int max) {
         genHolz = 0;
         genStein = 0;
         genEisen = 0;
-        generieren();
+        generieren(min, max);
     }
 
-    public void generieren() {
-        if (genHolz == 0) {
-            genHolz = random(100, 200);
-        }
-        if (genStein == 0) {
-            genStein = random(50, 100);
-        }
-        if (genEisen == 0) {
-            genEisen = random(10, 20);
-        }
+    public void generieren(int min, int max) {
+
+        genHolz = random(min, max);
+        genStein = random(min / 2, max / 2);
+        genEisen = random(min / 4, max / 4);
+
         System.out.println("[WORLD] World Generation");
         System.out.println("|| generiertes Holz: " + genHolz);
         System.out.println("|| generiertes Stein: " + genStein);

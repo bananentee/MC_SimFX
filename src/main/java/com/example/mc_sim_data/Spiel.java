@@ -10,8 +10,8 @@ public class Spiel {
     private final Welt world;
     private final Spieler player;
 
-    public Spiel () {
-        world = new Welt ();
+    public Spiel (int worldGen_min, int worldGen_max) {
+        world = new Welt (worldGen_min, worldGen_max);
         player = new Spieler (10, world);
     }
 

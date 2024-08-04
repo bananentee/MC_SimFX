@@ -191,4 +191,6 @@ public class Spieler {
     public Axt getAxe() {
         return axe;
     }
+
+    public void setCoins(int coins) { this.coins = coins; }
 }
