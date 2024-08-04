@@ -25,6 +25,7 @@ import javafx.scene.image.ImageView;
 
 public class HelloController implements Initializable {
 
+    public Button sell_button;
     /* FXML attributes */
     @FXML
     private BarChart<String, Integer> barchart;
