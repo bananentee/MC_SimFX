@@ -4,7 +4,6 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.Property;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -47,7 +46,9 @@ public class HelloController implements Initializable {
     private double progress;
     private double progressFactor;
     private int level;
-    private int total_sec = 5;
+    private int total_sec;
+    private int seconds;
+    private int minutes;
 
     // [UPDATE] runs every frame
     private final AnimationTimer timer = new AnimationTimer() {
@@ -57,40 +58,10 @@ public class HelloController implements Initializable {
         }
     };
 
-    private final Timer countdown_timer = new Timer();
-    private final TimerTask countdown_task = new TimerTask() {
-        int seconds = 60;
-        int minutes = total_sec / 60;
-
+    private Timer countdown_timer = new Timer();
+    private TimerTask countdown_task = new TimerTask() {
         public synchronized void run() {
-            if (total_sec < 60) {
-                seconds = total_sec;
-            }
-            if (total_sec > 0) {
-                if (total_sec % 60 == 0) {
-                    minutes--;
-                    seconds = 60;
-                }
-                if (seconds != 0) {
-                    total_sec--;
-                    seconds--;
-                    Platform.runLater(() -> worldGen_timer_display.setText(minutes + ":" + getSeconds(seconds)));
-                    Platform.runLater(() -> btn_worldGen_upgrade.setDisable(true));
-                }
-            } else {
-                Platform.runLater(() -> worldGen_timer_display.setText("0:00"));
-                total_sec = 0;
-                countdown_timer.cancel(); //TODO Fix that a new TimerTask can be scheduled to the Timer (line 220)
-                countdown_timer.purge();
-                Platform.runLater(() -> btn_worldGen_upgrade.setDisable(false));
-            }
-        }
-
-        private String getSeconds(int seconds) {
-            if (seconds < 10) {
-                return "0" + seconds;
-            }
-            return Integer.toString(seconds);
+            secondsTimer();
         }
     };
 
@@ -99,26 +70,26 @@ public class HelloController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        /* image innit */
+        /* gui innit */
         wood_image.setImage(new Image("file:ass/wood_block.png"));
         stone_image.setImage(new Image("file:ass/stone_block.png"));
         iron_image.setImage(new Image("file:ass/iron_ore.png"));
         coin_image.setImage(new Image("file:ass/coin.png"));
 
+        btn_delay_upgrade.setText("Upgrade Cost: 200");
+        btn_worldGen_upgrade.setText("Cost: 500");
+
         /* innit of local attributes */
         Spiel game = new Spiel(200, 500);
         world = game.getWorld();
         player = game.getPlayer();
-        SimpleIntegerProperty integerProperty = new SimpleIntegerProperty(total_sec);
-        integerProperty.add(total_sec);
 
         progress = 0;
         progressFactor = 1;
         level = 0;
         player.setCoins(10000);
 
-        btn_delay_upgrade.setText("Upgrade Cost: 200");
-        btn_worldGen_upgrade.setText("Cost: 500");
+        setTotalSeconds(300);
 
         /* start of the timers */
         timer.start();
@@ -218,7 +189,16 @@ public class HelloController implements Initializable {
     public void btnUpgradeWorldGen() {
         if (player.kaufe(500 + 500 * level)) {
             world.generieren(200 + (200 * level) / 2, 500 + (500 * level) / 2);
-            Platform.runLater(() -> countdown_timer.scheduleAtFixedRate(countdown_task, 0, 1000));
+            countdown_task = null;
+            countdown_timer = null;
+            setTotalSeconds(300 - 60 * level);
+            countdown_timer = new Timer();
+            countdown_task = new TimerTask() {
+                public synchronized void run() {
+                    secondsTimer();
+                }
+            };
+            countdown_timer.scheduleAtFixedRate(countdown_task, 0, 1000);
         } else {
             System.out.println("[SYSTEM] Nicht genug Coins!");
         }
@@ -252,6 +232,43 @@ public class HelloController implements Initializable {
         }
         progress += 0.005 * progressFactor;
         progressBar.setProgress(progress);
+    }
+
+    public void secondsTimer() {
+        if (total_sec < 60) {
+            seconds = total_sec;
+        }
+        if (total_sec > 0) {
+            if (total_sec % 60 == 0) {
+                minutes--;
+                seconds = 60;
+            }
+            if (seconds != 0) {
+                total_sec--;
+                seconds--;
+                Platform.runLater(() -> worldGen_timer_display.setText(minutes + ":" + getSeconds(seconds)));
+                Platform.runLater(() -> btn_worldGen_upgrade.setDisable(true));
+            }
+        } else {
+            Platform.runLater(() -> worldGen_timer_display.setText("0:00"));
+            total_sec = 0;
+            countdown_timer.cancel();
+            countdown_timer.purge();
+            Platform.runLater(() -> btn_worldGen_upgrade.setDisable(false));
+        }
+    }
+
+    public String getSeconds(int seconds) {
+        if (seconds < 10) {
+            return "0" + seconds;
+        }
+        return Integer.toString(seconds);
+    }
+
+    public void setTotalSeconds(int total_sec) {
+        this.total_sec = total_sec;
+        seconds = 60;
+        minutes = total_sec / seconds;
     }
 
     // use of a ChangeListener to implement the actual delay of the progressbar
