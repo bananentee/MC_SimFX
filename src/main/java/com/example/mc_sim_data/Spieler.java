@@ -29,19 +29,15 @@ public class Spieler {
             if (welt.getGenStein() <= 0) {
                 System.out.println("[PLAYER] Stein gibt es nicht mehr!");
             } else {
-                if (pickaxe.getMaterial().equals("Holz")) {
-                    stein += power;
-                    welt.subStein(power);
-                } else { // if material is equal to stone or iron
-                    stein += power;
-                    welt.subStein(power);
-                    if (welt.getGenEisen() <= 0) {
-                        System.out.println("[PLAYER] Eisen gibt es nicht mehr!");
-                    } else {
-                        eisen += power;
-                        welt.subEisen(power);
-                    }
-                }
+                stein += power;
+                welt.subStein(power);
+            }
+
+            if (welt.getGenEisen() <= 0) {
+                System.out.println("[PLAYER] Eisen gibt es nicht mehr!");
+            } else {
+                eisen += power;
+                welt.subEisen(power);
             }
         }
 
@@ -51,9 +47,10 @@ public class Spieler {
             if (axe != null) {
                 holz += staerke + axe.getWert();
                 welt.subHolz(staerke + axe.getWert());
+            } else {
+                holz += staerke;
+                welt.subHolz(staerke);
             }
-            holz += staerke;
-            welt.subHolz(staerke);
         }
 
         showInv();
